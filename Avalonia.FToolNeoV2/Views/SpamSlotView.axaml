@@ -1,0 +1,90 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Avalonia.FToolNeoV2.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Avalonia.FToolNeoV2.Views.SpamSlotView">
+    
+    <UserControl.Styles>
+        <Style Selector="ToggleButton PathIcon.tbchecked">
+            <Setter Property="IsVisible" Value="false"/>
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.tbchecked">
+            <Setter Property="IsVisible" Value="true"/>
+        </Style>
+        <Style Selector="ToggleButton PathIcon.tbunchecked">
+            <Setter Property="IsVisible" Value="true"/>
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.tbunchecked">
+            <Setter Property="IsVisible" Value="false"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Design.DataContext>
+        <viewModels:SpamSlotViewModel/>
+    </Design.DataContext>
+    
+    <Grid HorizontalAlignment="Center" ShowGridLines="False" Margin="20 10 20 20" ColumnDefinitions="40,100,150,*" RowDefinitions="*,*,*,*">
+        <StackPanel Spacing="10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="0 0 0 10">
+            <TextBlock Foreground="Black" FontSize="18" Width="40" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Index}"/>
+            <Rectangle Fill="White" Width="300" Height="1" VerticalAlignment="Center" HorizontalAlignment="Right"  />
+        </StackPanel>
+        <TextBlock ToolTip.Tip="The F-key that gets spammed." VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" > F-Key </TextBlock>
+        <TextBlock ToolTip.Tip="The number key that gets spammed." VerticalAlignment="Center" Grid.Row="2" Grid.Column="0"> Bar </TextBlock>
+        <TextBlock ToolTip.Tip="The delay between inputs in ms." VerticalAlignment="Center" Grid.Row="3" Grid.Column="0"> Delay </TextBlock>
+        <ComboBox IsEnabled="{Binding !IsSpamming}" SelectedIndex="{Binding SelectedFKeyIndex}" Width="75" ToolTip.Tip="The F-key that gets spammed." HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" MaxDropDownHeight="150" Background="Transparent">
+            <ComboBoxItem> - </ComboBoxItem>
+            <ComboBoxItem> 1 </ComboBoxItem>
+            <ComboBoxItem> 2 </ComboBoxItem>
+            <ComboBoxItem> 3 </ComboBoxItem>
+            <ComboBoxItem> 4 </ComboBoxItem>
+            <ComboBoxItem> 5 </ComboBoxItem>
+            <ComboBoxItem> 6 </ComboBoxItem>
+            <ComboBoxItem> 7 </ComboBoxItem>
+            <ComboBoxItem> 8 </ComboBoxItem>
+            <ComboBoxItem> 9 </ComboBoxItem>
+        </ComboBox>
+        
+        <ComboBox IsEnabled="{Binding !IsSpamming}" SelectedIndex="{Binding SelectedBarIndex}" Width="75" ToolTip.Tip="The number key that gets spammed." HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" MaxDropDownHeight="150" Background="Transparent">
+            <ComboBoxItem> - </ComboBoxItem>
+            <ComboBoxItem> 1 </ComboBoxItem>
+            <ComboBoxItem> 2 </ComboBoxItem>
+            <ComboBoxItem> 3 </ComboBoxItem>
+            <ComboBoxItem> 4 </ComboBoxItem>
+            <ComboBoxItem> 5 </ComboBoxItem>
+            <ComboBoxItem> 6 </ComboBoxItem>
+            <ComboBoxItem> 7 </ComboBoxItem>
+            <ComboBoxItem> 8 </ComboBoxItem>
+            <ComboBoxItem> 9 </ComboBoxItem>
+        </ComboBox>
+
+        <NumericUpDown IsEnabled="{Binding !IsSpamming}" Width="75" Value="1000" FontSize="11" ToolTip.Tip="The delay between inputs in ms." Minimum="{Binding SpamSlot.MINIMUM_DELAY}" ShowButtonSpinner="False" Text="{Binding DelayText}" Grid.Row="3" Grid.Column="1" Watermark="ms" HorizontalAlignment="Center" Background="Transparent"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="2" ToolTip.Tip="{Binding AttachedTo}">
+            <TextBlock FontSize="10" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" > attached to:</TextBlock>
+            <TextBlock FontSize="12" Foreground="Black" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" Text="{Binding AttachedTo}" /> 
+        </StackPanel>
+
+        <Button IsEnabled="{Binding !IsSpamming}" Command="{Binding OnSelectProcessButtonClicked}" Grid.Row="2" Grid.Column="2" Height="30" Width="140">
+            <StackPanel Orientation="Horizontal">
+                <PathIcon HorizontalAlignment="Left" Data="{StaticResource select_all_off_regular}"/>
+                <TextBlock Margin="5 0 0 0 ">Select process</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <Button Grid.Row="3" Grid.Column="2" Height="30" Width="140">
+            <StackPanel Orientation="Horizontal">
+                <PathIcon HorizontalAlignment="Left" Data="{StaticResource keyboard_regular}"/>
+                <TextBlock HorizontalAlignment="Center" Margin="5 0 0 0 "> Set hotkey</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <ToggleButton IsEnabled="{Binding StartButtonIsEnabled}" Command="{Binding OnStartButtonClicked}" Grid.Row="1" Grid.RowSpan="3" Grid.Column="3" Height="100" Width="60">
+            <Panel>
+                <PathIcon Classes="tbchecked" Foreground="DeepPink" HorizontalAlignment="Center" Data="{StaticResource stop_regular}"/>
+                <PathIcon Classes="tbunchecked" Foreground="SpringGreen" HorizontalAlignment="Center" Data="{StaticResource play_regular}"/>
+            </Panel>
+        </ToggleButton>
+    </Grid>
+</UserControl>

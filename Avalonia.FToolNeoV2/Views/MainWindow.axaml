@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Avalonia.FToolNeoV2.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="480"
+        x:Class="Avalonia.FToolNeoV2.Views.MainWindow"
+        Icon="/Assets/F.png"
+        Title="F-Tool neo V2"
+        Background="Transparent"
+        TransparencyLevelHint="AcrylicBlur"
+        MinWidth="410"
+        Width="410"
+        MinHeight="260"
+        Height="480"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial 
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="0.6"
+                    MaterialOpacity="0.1" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        
+        <DockPanel>
+            <Panel DockPanel.Dock="Top">
+                <Image Source="/Assets/logo.png" Width="100" HorizontalAlignment="Left" Margin="20 20 0 0" />
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button IsVisible="{Binding IsNotElevated}" ToolTip.Tip="Sir, pls run as admin." Margin="0 20 20 0">
+                        <PathIcon Foreground="Crimson" Data="{StaticResource shield_keyhole_regular}"/>
+                    </Button>
+                    <Button ToolTip.Tip="About" Margin="0 20 20 0">
+                        <PathIcon Data="{StaticResource question_regular}"/>
+                    </Button>
+                    <Button ToolTip.Tip="Options" Margin="0 20 20 0">
+                        <PathIcon Data="{StaticResource settings_regular}"/>
+                    </Button>
+                </StackPanel>
+            </Panel>
+            
+            <StackPanel Spacing="10" Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="20 20 20 20">
+                <Button Width="300" Command="{Binding OnAddButtonClicked}" HorizontalAlignment="Center">
+                    <PathIcon Data="{StaticResource add_regular}"/>
+                </Button>
+                <Button IsVisible="{Binding RemoveButtonActive}" Width="50" Command="{Binding OnRemoveButtonClicked}" HorizontalAlignment="Center">
+                    <PathIcon Data="{StaticResource remove_regular}"/>
+                </Button>
+            </StackPanel>
+            
+            <ScrollViewer AllowAutoHide="False" Name="ScrollViewSlots" DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
+                <ItemsControl Items="{Binding SpamSlotViews}" />
+            </ScrollViewer>
+            
+        </DockPanel>
+    </Panel>
+</Window>
