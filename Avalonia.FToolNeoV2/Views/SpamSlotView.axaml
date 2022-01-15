@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Avalonia.FToolNeoV2.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:Class="Avalonia.FToolNeoV2.Views.SpamSlotView">
     
     <UserControl.Styles>
@@ -73,14 +73,14 @@
             </StackPanel>
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="2" Height="30" Width="140">
+        <Button Command="{Binding OnHotkeyButtonClicked}" Grid.Row="3" Grid.Column="2" Height="30" Width="140">
             <StackPanel Orientation="Horizontal">
                 <PathIcon HorizontalAlignment="Left" Data="{StaticResource keyboard_regular}"/>
                 <TextBlock HorizontalAlignment="Center" Margin="5 0 0 0 "> Set hotkey</TextBlock>
             </StackPanel>
         </Button>
 
-        <ToggleButton IsEnabled="{Binding StartButtonIsEnabled}" Command="{Binding OnStartButtonClicked}" Grid.Row="1" Grid.RowSpan="3" Grid.Column="3" Height="100" Width="60">
+        <ToggleButton IsChecked="{Binding IsSpamming}" IsEnabled="{Binding StartButtonIsEnabled}" Command="{Binding OnStartButtonClicked}" Grid.Row="1" Grid.RowSpan="3" Grid.Column="3" Height="100" Width="60">
             <Panel>
                 <PathIcon Classes="tbchecked" Foreground="DeepPink" HorizontalAlignment="Center" Data="{StaticResource stop_regular}"/>
                 <PathIcon Classes="tbunchecked" Foreground="SpringGreen" HorizontalAlignment="Center" Data="{StaticResource play_regular}"/>

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
 using Avalonia.FToolNeoV2.Enums;
 using Avalonia.FToolNeoV2.Models;
 using Avalonia.FToolNeoV2.Services;
+using GlobalHotKeys.Native.Types;
 using ReactiveUI;
 
 namespace Avalonia.FToolNeoV2.ViewModels;
 
 public class SpamSlotViewModel : ViewModelBase
 {
-    public string Index { get; set; }
+    public string Index { get; set; } = null!;
 
     public int SelectedFKeyIndex
     {
@@ -37,7 +37,7 @@ public class SpamSlotViewModel : ViewModelBase
 
     public string AttachedTo
     {
-        get => _attachedTo;
+        get => _attachedTo ?? string.Empty;
         set => this.RaiseAndSetIfChanged(ref _attachedTo, value);
     }
 
@@ -49,7 +49,7 @@ public class SpamSlotViewModel : ViewModelBase
 
     public string DelayText
     {
-        get => _delayText;
+        get => _delayText ?? string.Empty;
         set
         {
             this.RaiseAndSetIfChanged(ref _delayText, value);
@@ -84,13 +84,15 @@ public class SpamSlotViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _startButtonIsEnabled, value);
     }
 
-    public SpamSlot SpamSlot { get; }
+    public SpamSlot SpamSlot { get; } = null!;
 
-    public Interaction<ProcessSelectionViewModel, Process?> ProcessSelectionDialog { get; }
+    public Interaction<ProcessSelectionViewModel, Process?> ProcessSelectionDialog { get; } = null!;
 
-    public ReactiveCommand<Unit, Unit> OnSelectProcessButtonClicked { get; }
-    
-    public ReactiveCommand<Unit, Unit> OnStartButtonClicked { get; }
+    public ReactiveCommand<Unit, Unit> OnSelectProcessButtonClicked { get; } = null!;
+
+    public ReactiveCommand<Unit, Unit> OnHotkeyButtonClicked { get; } = null!;
+
+    public ReactiveCommand<Unit, Unit> OnStartButtonClicked { get; } = null!;
 
     public SpamService? SpamService { get; private set; }
 
@@ -110,6 +112,8 @@ public class SpamSlotViewModel : ViewModelBase
 
     private bool _startButtonIsEnabled;
     
+    private int? _hotkeyId;
+
     public SpamSlotViewModel(int index, SpamSlot spamSlot)
     {
         Index = $"#{index}";
@@ -130,23 +134,36 @@ public class SpamSlotViewModel : ViewModelBase
                 ProcessSelected = true;
             }
         });
-
-        OnStartButtonClicked = ReactiveCommand.Create(() =>
+        
+        OnHotkeyButtonClicked = ReactiveCommand.Create(() =>
         {
             if (SpamService == null) return;
-
-            if (SpamService.IsActive)
-                SpamService.Stop();
+            if (_hotkeyId == null)
+                _hotkeyId = SpamHotkeyService.RegisterHotkey(VirtualKeyCode.KEY_1, Modifiers.Shift, this);
             else
-                SpamService.Start();
-
-            IsSpamming = SpamService.IsActive;
+                SpamHotkeyService.UnregisterHotkey(_hotkeyId.Value);
         });
+
+        OnStartButtonClicked = ReactiveCommand.Create(ToggleSpammer);
     }
 
-    public SpamSlotViewModel() => throw new NotImplementedException();
+    public SpamSlotViewModel()
+    {
+        // ** nothing **
+    }
 
-    private Keys? IndexToFKey(int index)
+    /// <summary>
+    /// Toggle the spammer.
+    /// </summary>
+    public void ToggleSpammer()
+    {
+        if (SpamService == null) return;
+
+        SpamService.Toggle();
+        IsSpamming = SpamService.IsActive;
+    }
+
+    private static Keys? IndexToFKey(int index)
     {
         return index switch
         {
@@ -162,8 +179,8 @@ public class SpamSlotViewModel : ViewModelBase
             _ => null
         };
     }
-    
-    private Keys? IndexToBarKey(int index)
+
+    private static Keys? IndexToBarKey(int index)
     {
         return index switch
         {

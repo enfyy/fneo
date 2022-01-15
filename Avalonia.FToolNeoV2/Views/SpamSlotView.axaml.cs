@@ -12,8 +12,6 @@ public class SpamSlotView : ReactiveUserControl<SpamSlotViewModel>
     public SpamSlotView()
     {
         InitializeComponent();
-
-        this.WhenActivated(d => d(ViewModel!.ProcessSelectionDialog.RegisterHandler(ShowProcessSelectionDialogAsync)));
     }
     
     private async Task ShowProcessSelectionDialogAsync(InteractionContext<ProcessSelectionViewModel, Process?> interaction)
@@ -30,5 +28,6 @@ public class SpamSlotView : ReactiveUserControl<SpamSlotViewModel>
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+        this.WhenActivated(d => d(ViewModel!.ProcessSelectionDialog.RegisterHandler(ShowProcessSelectionDialogAsync)));
     }
 }

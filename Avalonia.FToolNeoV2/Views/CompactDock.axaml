@@ -1,0 +1,70 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Avalonia.FToolNeoV2.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="160" d:DesignHeight="400"
+        x:Class="Avalonia.FToolNeoV2.Views.CompactDock"
+        Title="CompactDock"
+        SystemDecorations="None">
+    
+    <Window.Styles>
+        <Style Selector="ToggleButton PathIcon.tbchecked">
+            <Setter Property="IsVisible" Value="false"/>
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.tbchecked">
+            <Setter Property="IsVisible" Value="true"/>
+        </Style>
+        <Style Selector="ToggleButton PathIcon.tbunchecked">
+            <Setter Property="IsVisible" Value="true"/>
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.tbunchecked">
+            <Setter Property="IsVisible" Value="false"/>
+        </Style>
+    </Window.Styles>
+    
+    <Design.DataContext>
+        <viewModels:CompactDockViewModel/>
+    </Design.DataContext>
+    
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <ToggleButton Width="35">
+                <PathIcon Data="{StaticResource dismiss_regular}"/>
+            </ToggleButton>
+            <Button Width="35" Name="DragMoveButton">
+                <PathIcon Data="{StaticResource arrow_move_regular}"/>
+            </Button>
+            <ToggleButton Width="35">
+                <PathIcon Data="{StaticResource layer_regular}"/>
+            </ToggleButton>
+            <ToggleButton Width="35">
+                <PathIcon Data="{StaticResource arrow_fit_width_regular}"/>
+            </ToggleButton>
+        </StackPanel>
+        <WrapPanel>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="5 0 5 0">
+                <ToggleButton Width="140" IsEnabled="{Binding StartButtonIsEnabled}" Command="{Binding OnStartButtonClicked}" >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="20" Margin="0 0 5 0" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="12">#1</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Width="80" HorizontalAlignment="Left" Foreground="White" VerticalAlignment="Center" FontSize="9">Forsaken Kingdom sixteen letter name</TextBlock>
+                        <PathIcon Classes="tbchecked" Foreground="DeepPink" HorizontalAlignment="Right" Data="{StaticResource stop_regular}"/>
+                        <PathIcon Classes="tbunchecked" Foreground="SpringGreen" HorizontalAlignment="Right" Data="{StaticResource play_regular}"/>
+                    </StackPanel>
+                </ToggleButton>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="5 0 5 0">
+                <ToggleButton Width="140" IsEnabled="{Binding StartButtonIsEnabled}" Command="{Binding OnStartButtonClicked}" >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="20" Margin="0 0 5 0" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" FontSize="12">#1</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Width="80" HorizontalAlignment="Left" Foreground="White" VerticalAlignment="Center" FontSize="9">Forsaken Kingdom sixteen letter name</TextBlock>
+                        <PathIcon Classes="tbchecked" Foreground="DeepPink" HorizontalAlignment="Right" Data="{StaticResource stop_regular}"/>
+                        <PathIcon Classes="tbunchecked" Foreground="SpringGreen" HorizontalAlignment="Right" Data="{StaticResource play_regular}"/>
+                    </StackPanel>
+                </ToggleButton>
+            </StackPanel>
+        </WrapPanel>
+        
+        
+    </StackPanel>
+</Window>

@@ -1,5 +1,5 @@
-using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.FToolNeoV2.Services;
 using Avalonia.Markup.Xaml;
 using Avalonia.FToolNeoV2.ViewModels;
 using Avalonia.FToolNeoV2.Views;
@@ -8,6 +8,7 @@ namespace Avalonia.FToolNeoV2
 {
     public class App : Application
     {
+        
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -17,6 +18,8 @@ namespace Avalonia.FToolNeoV2
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                desktop.Exit += (_, _) => SpamHotkeyService.CleanUp();
+                
                 desktop.MainWindow = new MainWindow
                 {
                     DataContext = new MainWindowViewModel(),
@@ -25,5 +28,6 @@ namespace Avalonia.FToolNeoV2
 
             base.OnFrameworkInitializationCompleted();
         }
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia.FToolNeoV2.Enums;
+using Avalonia.Input;
 using Newtonsoft.Json;
 
 namespace Avalonia.FToolNeoV2.Models;
@@ -35,7 +36,7 @@ public class SpamSlot
     /// <summary>
     /// The hotkey modifier keys.
     /// </summary>
-    public ModifierKeys? HotkeyModifierKeys { get; set; }
+    public KeyModifiers? HotkeyModifierKeys { get; set; }
     
     /// <summary>
     /// The hotkey.
@@ -47,7 +48,7 @@ public class SpamSlot
     /// The json constructor
     /// </summary>
     [JsonConstructor]
-    public SpamSlot(string index, int delay, Keys? fKey, Keys? barKey, ModifierKeys? hotkeyModifierKeys, Keys? hotkey)
+    public SpamSlot(string index, int delay, Keys? fKey, Keys? barKey, KeyModifiers? hotkeyModifierKeys, Keys? hotkey)
     {
         Index = index;
         Delay = delay;

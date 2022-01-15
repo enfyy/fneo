@@ -29,7 +29,7 @@ public class SpamService
     /// The thread that the spammer is using.
     /// </summary>
     private Thread? _thread;
-
+    
 
     /// <summary>
     /// The constructor.
@@ -69,15 +69,17 @@ public class SpamService
     }
 
     /// <summary>
-    /// Is the service ready to start spamming?
+    /// Pause / Unpause the spam
     /// </summary>
-    /// <returns>True when ready, else false.</returns>
-    public bool IsReady() => !IsActive && (_spamSlot.BarKey != null || _spamSlot.FKey != null);
+    public void Toggle()
+    {
+        if (IsActive) 
+            Stop();
+        else 
+            Start();
+    }
 
-    /// <summary>
-    /// Starts a new thread that spams.
-    /// </summary>
-    public void Start()
+    private void Start()
     {
         IsActive = true;
         _thread = new Thread(Spam);

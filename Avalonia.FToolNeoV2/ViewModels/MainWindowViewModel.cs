@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
 using System.Security.Principal;
@@ -59,15 +58,6 @@ public class MainWindowViewModel : ViewModelBase
             
             SpamSlotViews.Remove(last);
         });
-    }
-
-    /// <summary>
-    /// Stops all spammers.
-    /// </summary>
-    public void OnWindowClosing(object? sender, CancelEventArgs e)
-    {
-        foreach (var spamSlot in SpamSlotViews) 
-            spamSlot.SpamService?.Stop();
     }
 
     public void OnAddButtonClicked() => SpamSlotViews.Add(new SpamSlotViewModel(SpamSlotViews.Count + 1, new SpamSlot()));

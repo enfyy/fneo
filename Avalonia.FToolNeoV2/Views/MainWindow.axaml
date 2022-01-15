@@ -38,6 +38,9 @@
                     <Button IsVisible="{Binding IsNotElevated}" ToolTip.Tip="Sir, pls run as admin." Margin="0 20 20 0">
                         <PathIcon Foreground="Crimson" Data="{StaticResource shield_keyhole_regular}"/>
                     </Button>
+                    <Button ToolTip.Tip="Open compact dock" Margin="0 20 20 0">
+                        <PathIcon Data="{StaticResource dock_regular}"/>
+                    </Button>
                     <Button ToolTip.Tip="About" Margin="0 20 20 0">
                         <PathIcon Data="{StaticResource question_regular}"/>
                     </Button>
@@ -55,11 +58,9 @@
                     <PathIcon Data="{StaticResource remove_regular}"/>
                 </Button>
             </StackPanel>
-            
             <ScrollViewer AllowAutoHide="False" Name="ScrollViewSlots" DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
                 <ItemsControl Items="{Binding SpamSlotViews}" />
             </ScrollViewer>
-            
         </DockPanel>
     </Panel>
 </Window>
