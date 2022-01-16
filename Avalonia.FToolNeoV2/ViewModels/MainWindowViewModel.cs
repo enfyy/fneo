@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Security.Principal;
 using Avalonia.FToolNeoV2.Models;
+using Avalonia.FToolNeoV2.Services;
 using ReactiveUI;
 
 namespace Avalonia.FToolNeoV2.ViewModels;
@@ -44,7 +45,7 @@ public class MainWindowViewModel : ViewModelBase
         SpamSlotViews = new ObservableCollection<SpamSlotViewModel>();
         SpamSlotViews.CollectionChanged += OnSpamSlotViewsCollectionChanged;
 
-        foreach (var slot in ApplicationState.Instance.SpamSlots)
+        foreach (var slot in PersistenceManager.Instance.GetApplicationState().SpamSlots)
             SpamSlotViews.Add(new SpamSlotViewModel(SpamSlotViews.Count + 1, slot));
 
         OnRemoveButtonClicked = ReactiveCommand.Create(() =>
@@ -57,10 +58,13 @@ public class MainWindowViewModel : ViewModelBase
                 last.SpamService?.Stop();
             
             SpamSlotViews.Remove(last);
+            PersistenceManager.Instance.GetApplicationState().SpamSlots.Remove(last.SpamSlot);
         });
     }
 
-    public void OnAddButtonClicked() => SpamSlotViews.Add(new SpamSlotViewModel(SpamSlotViews.Count + 1, new SpamSlot()));
+    public void OnAddButtonClicked() =>
+        SpamSlotViews.Add(new SpamSlotViewModel(SpamSlotViews.Count + 1,
+            new SpamSlot(SpamSlotViews.Count + 1, PersistenceManager.Instance.GetApplicationState())));
 
     private void OnSpamSlotViewsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) 
         => RemoveButtonActive = SpamSlotViews.Count > 1;

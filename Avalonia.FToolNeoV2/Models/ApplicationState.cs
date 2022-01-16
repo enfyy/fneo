@@ -10,19 +10,6 @@ namespace Avalonia.FToolNeoV2.Models;
 [Serializable]
 public class ApplicationState
 {
-    private static ApplicationState? _instance;
-    
-    private static readonly object singletonLock = new();
-    
-    public static ApplicationState Instance
-    {
-        get
-        {
-            lock (singletonLock)
-                return _instance ??= Load();
-        }
-    }
-    
     /// <summary>
     /// List of the spammer slots.
     /// </summary>
@@ -39,7 +26,7 @@ public class ApplicationState
     /// <param name="spamSlots">The spam slots.</param>
     /// <param name="settings">The application settings.</param>
     [JsonConstructor]
-    private ApplicationState(List<SpamSlot> spamSlots, ApplicationSettings settings)
+    public ApplicationState(List<SpamSlot> spamSlots, ApplicationSettings settings)
     {
         SpamSlots = spamSlots;
         ApplicationSettings = settings;
@@ -48,24 +35,17 @@ public class ApplicationState
     /// <summary>
     /// Default Constructor
     /// </summary>
-    private ApplicationState()
+    public ApplicationState()
     {
-        SpamSlots = new List<SpamSlot>
-        {
-            new (),
-            new ()
-        };
+        SpamSlots = new List<SpamSlot>();
+        _ = new SpamSlot(1, this);
+        _ = new SpamSlot(2, this);
         ApplicationSettings = new ApplicationSettings();
     }
 
     /// <summary>
-    /// Tries to load application state from json.
-    /// Creates a new state instead if loading failed.
+    /// Create a shallow copy.
     /// </summary>
-    /// <returns>The <see cref="ApplicationState"/></returns>
-    public static ApplicationState Load()
-    {
-        //TODO: try load from json 
-        return new ApplicationState();
-    }
+    /// <returns>The copy of the application state.</returns>
+    public ApplicationState ShallowCopy() => (ApplicationState) MemberwiseClone();
 }

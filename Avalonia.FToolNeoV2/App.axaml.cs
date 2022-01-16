@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.FToolNeoV2.Services;
 using Avalonia.Markup.Xaml;
@@ -18,7 +19,7 @@ namespace Avalonia.FToolNeoV2
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.Exit += (_, _) => SpamHotkeyService.CleanUp();
+                desktop.Exit += async (_, _) => await OnApplicationEnd();
                 
                 desktop.MainWindow = new MainWindow
                 {
@@ -27,6 +28,12 @@ namespace Avalonia.FToolNeoV2
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+        private async Task OnApplicationEnd()
+        {
+            SpamHotkeyService.CleanUp();
+            await PersistenceManager.Instance.SaveApplicationStateAsync();
         }
         
     }

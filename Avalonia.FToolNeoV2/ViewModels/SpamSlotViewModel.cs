@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
 using Avalonia.FToolNeoV2.Enums;
@@ -118,7 +119,25 @@ public class SpamSlotViewModel : ViewModelBase
     {
         Index = $"#{index}";
         SpamSlot = spamSlot;
+        DelayText = spamSlot.Delay.ToString();
+        if (spamSlot.BarKey != null) SelectedBarIndex = BarKeyToIndex(spamSlot.BarKey.Value);
+        if (spamSlot.FKey != null) SelectedFKeyIndex = FKeyToIndex(spamSlot.FKey.Value);
         
+        // try to recover attached process  
+        if (spamSlot.ProcessId != null)
+        {
+            try
+            {
+                var process = Process.GetProcessById(spamSlot.ProcessId.Value);
+                AttachToProcess(process);
+            }
+            //process not found i guess...
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+        }
+        
+        //TODO: recover hotkey
+
         ProcessSelectionDialog = new Interaction<ProcessSelectionViewModel, Process?>();
         
         OnSelectProcessButtonClicked = ReactiveCommand.CreateFromTask( async () =>
@@ -127,12 +146,7 @@ public class SpamSlotViewModel : ViewModelBase
             
             var result = await ProcessSelectionDialog.Handle(processSelection);
 
-            if (result != null)
-            {
-                AttachedTo = result.MainWindowTitle;
-                SpamService = new SpamService(result, SpamSlot);
-                ProcessSelected = true;
-            }
+            if (result != null) AttachToProcess(result);
         });
         
         OnHotkeyButtonClicked = ReactiveCommand.Create(() =>
@@ -161,6 +175,14 @@ public class SpamSlotViewModel : ViewModelBase
 
         SpamService.Toggle();
         IsSpamming = SpamService.IsActive;
+    }
+
+    private void AttachToProcess(Process process)
+    {
+        AttachedTo = process.MainWindowTitle;
+        SpamSlot.ProcessId = process.Id;
+        SpamService = new SpamService(process, SpamSlot);
+        ProcessSelected = true;
     }
 
     private static Keys? IndexToFKey(int index)
@@ -194,6 +216,40 @@ public class SpamSlotViewModel : ViewModelBase
             8 => Keys.D8,
             9 => Keys.D9,
             _ => null
+        };
+    }
+    
+    private static int FKeyToIndex(Keys key)
+    {
+        return key switch
+        {
+            Keys.F1 => 1,
+            Keys.F2 => 2,
+            Keys.F3 => 3,
+            Keys.F4 => 4,
+            Keys.F5 => 5,
+            Keys.F6 => 6,
+            Keys.F7 => 7,
+            Keys.F8 => 8,
+            Keys.F9 => 9,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    private static int BarKeyToIndex(Keys key)
+    {
+        return key switch
+        {
+            Keys.D1 => 1,
+            Keys.D2 => 2,
+            Keys.D3 => 3,
+            Keys.D4 => 4,
+            Keys.D5 => 5,
+            Keys.D6 => 6,
+            Keys.D7 => 7,
+            Keys.D8 => 8,
+            Keys.D9 => 9,
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 }

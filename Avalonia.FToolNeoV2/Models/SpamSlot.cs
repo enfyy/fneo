@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia.FToolNeoV2.Enums;
+using Avalonia.FToolNeoV2.Services;
 using Avalonia.Input;
 using Newtonsoft.Json;
 
@@ -11,12 +12,13 @@ public class SpamSlot
     /// <summary>
     /// The minimum delay
     /// </summary>
+    [JsonIgnore]
     public int MINIMUM_DELAY { get; } = 50;
     
     /// <summary>
     /// The slot index.
     /// </summary>
-    public string Index { get; set; }
+    public int Index { get; set; }
     
     /// <summary>
     /// The delay of the spammer in ms.
@@ -43,12 +45,17 @@ public class SpamSlot
     /// </summary>
     public Keys? Hotkey { get; set; }
 
+    /// <summary>
+    /// id of the attached Process.
+    /// </summary>
+    public int? ProcessId { get; set; }
+
 
     /// <summary>
     /// The json constructor
     /// </summary>
     [JsonConstructor]
-    public SpamSlot(string index, int delay, Keys? fKey, Keys? barKey, KeyModifiers? hotkeyModifierKeys, Keys? hotkey)
+    public SpamSlot(int index, int delay, Keys? fKey, Keys? barKey, KeyModifiers? hotkeyModifierKeys, Keys? hotkey)
     {
         Index = index;
         Delay = delay;
@@ -61,13 +68,16 @@ public class SpamSlot
     /// <summary>
     /// Default constructor
     /// </summary>
-    public SpamSlot()
+    /// <param name="index">The slot index.</param>
+    /// <param name="applicationState">The application state.</param>
+    public SpamSlot(int index, ApplicationState applicationState)
     {
-        Index = Guid.NewGuid().ToString();
+        Index = index;
         Delay = MINIMUM_DELAY;
         FKey = null;
         BarKey = null;
         HotkeyModifierKeys = null;
         Hotkey = null;
+        applicationState.SpamSlots.Add(this);
     }
 }

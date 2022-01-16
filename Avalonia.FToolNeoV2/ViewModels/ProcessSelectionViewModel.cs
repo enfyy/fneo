@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using Avalonia.FToolNeoV2.Models;
+using Avalonia.FToolNeoV2.Services;
 using Avalonia.FToolNeoV2.Utils;
 using ReactiveUI;
 
@@ -50,7 +51,8 @@ public class ProcessSelectionViewModel : ViewModelBase
     /// </summary>
     private void FetchProcessData()
     {
-        var processes = Process.GetProcessesByName(ApplicationState.Instance.ApplicationSettings.ProcessName);
+        var processName = PersistenceManager.Instance.GetApplicationState().ApplicationSettings.ProcessName;
+        var processes = Process.GetProcessesByName(processName);
         var i = 0;
 
         _indexedProcesses.Clear();
