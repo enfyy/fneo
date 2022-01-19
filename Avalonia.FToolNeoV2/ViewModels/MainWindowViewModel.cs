@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Security.Principal;
 using Avalonia.FToolNeoV2.Models;
 using Avalonia.FToolNeoV2.Services;
@@ -14,6 +15,10 @@ public class MainWindowViewModel : ViewModelBase
     public ObservableCollection<SpamSlotViewModel> SpamSlotViews { get; }
     
     public ReactiveCommand<Unit, Unit> OnRemoveButtonClicked { get; init; }
+    
+    public ReactiveCommand<Unit, Unit> OnSettingsButtonClicked { get; } = null!;
+
+    public Interaction<SettingsWindowViewModel, Unit> SettingsWindowDialog { get; } = null!;
 
     private bool RemoveButtonActive
     {
@@ -54,11 +59,21 @@ public class MainWindowViewModel : ViewModelBase
             if (last == null)
                 return;
 
-            if (last.IsSpamming) 
+            if (last.IsSpamming)
                 last.SpamService?.Stop();
             
+            last.UnregisterHotkey();
+
             SpamSlotViews.Remove(last);
             PersistenceManager.Instance.GetApplicationState().SpamSlots.Remove(last.SpamSlot);
+        });
+        
+        SettingsWindowDialog = new Interaction<SettingsWindowViewModel, Unit>();
+        
+        OnSettingsButtonClicked = ReactiveCommand.CreateFromTask( async () =>
+        {
+            var settingsViewModel = new SettingsWindowViewModel(); 
+            await SettingsWindowDialog.Handle(settingsViewModel);
         });
     }
 

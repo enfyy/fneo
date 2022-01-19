@@ -64,9 +64,10 @@ public class PersistenceManager
     {
         if (_applicationState == null && state == null)
             throw new ArgumentNullException(nameof(state), "No ApplicationState loaded yet or and parameter is null.");
-        
-        var applicationState = state ?? _applicationState;
-        var contentText = JsonConvert.SerializeObject(applicationState);
+
+        if (state != null)
+            _applicationState = state;
+        var contentText = JsonConvert.SerializeObject(_applicationState);
 
         await using var streamWriter = new StreamWriter(File.Create(Constants.PERSISTENT_FILE_NAME), Encoding.UTF8);
         await streamWriter.WriteAsync(contentText);

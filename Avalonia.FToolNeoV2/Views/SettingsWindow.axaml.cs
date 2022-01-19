@@ -1,14 +1,14 @@
 ﻿using Avalonia.FToolNeoV2.ViewModels;
 using Avalonia.Markup.Xaml;
+using System;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using System;
 
 namespace Avalonia.FToolNeoV2.Views;
 
-public class ProcessSelectionWindow : ReactiveWindow<ProcessSelectionWindowViewModel>
+public class SettingsWindow : ReactiveWindow<SettingsWindowViewModel>
 {
-    public ProcessSelectionWindow()
+    public SettingsWindow()
     {
         InitializeComponent();
 #if DEBUG
@@ -19,6 +19,7 @@ public class ProcessSelectionWindow : ReactiveWindow<ProcessSelectionWindowViewM
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
-        this.WhenActivated(d => d(ViewModel!.OnApplyButtonClicked.Subscribe(Close)));
+        this.WhenActivated(d => d(ViewModel!.OnApplyButtonClicked.Subscribe((_) => Close())));
+        this.WhenActivated(d => d(ViewModel!.OnCancelButtonClicked.Subscribe((_) => Close())));
     }
 }

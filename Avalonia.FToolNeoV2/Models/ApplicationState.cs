@@ -43,9 +43,16 @@ public class ApplicationState
         ApplicationSettings = new ApplicationSettings();
     }
 
+
     /// <summary>
-    /// Create a shallow copy.
+    /// Create a copy that also references a new copy of the settings.
     /// </summary>
-    /// <returns>The copy of the application state.</returns>
-    public ApplicationState ShallowCopy() => (ApplicationState) MemberwiseClone();
+    /// <returns>The copy of the application state and settings.</returns>
+    public ApplicationState SemiDeepCopy()
+    {
+        var settingsCopy = ApplicationSettings.ShallowCopy();
+        var copy = (ApplicationState) MemberwiseClone();
+        copy.ApplicationSettings = settingsCopy;
+        return copy;
+    }
 }

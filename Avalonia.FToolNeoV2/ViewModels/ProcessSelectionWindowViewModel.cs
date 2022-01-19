@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive;
-using Avalonia.FToolNeoV2.Models;
 using Avalonia.FToolNeoV2.Services;
 using Avalonia.FToolNeoV2.Utils;
 using ReactiveUI;
 
 namespace Avalonia.FToolNeoV2.ViewModels;
 
-public class ProcessSelectionViewModel : ViewModelBase
+public class ProcessSelectionWindowViewModel : ViewModelBase
 {
     public ObservableCollection<string> ProcessNames { get; }
     
@@ -30,7 +28,7 @@ public class ProcessSelectionViewModel : ViewModelBase
     
     private int _selectedIndex;
 
-    public ProcessSelectionViewModel()
+    public ProcessSelectionWindowViewModel()
     {
         _indexedProcesses = new Dictionary<int, Process>();
         ProcessNames = new ObservableCollection<string>();
@@ -63,6 +61,9 @@ public class ProcessSelectionViewModel : ViewModelBase
             ProcessNames.Add(process.MainWindowTitle);
             i++;
         }
+
+        if (processes.Length == 0) 
+            SelectedIndex = -1;
     }
 
     /// <summary>

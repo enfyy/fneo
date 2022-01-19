@@ -1,0 +1,85 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Avalonia.FToolNeoV2.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="300"
+        x:Class="Avalonia.FToolNeoV2.Views.SettingsWindow"
+        Title="Settings"
+        MinHeight="270"
+        MinWidth="350"
+        Height="270"
+        Width="350"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner">
+
+    <Design.DataContext>
+        <viewModels:SettingsWindowViewModel />
+    </Design.DataContext>
+    
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="0.6"
+                    MaterialOpacity="0.1" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <DockPanel LastChildFill="False">
+            
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock Margin="0 10 0 0" HorizontalAlignment="Center" FontSize="18"> Settings </TextBlock>
+                <Rectangle Margin="0 0 0 10 " Fill="White" Width="100" Height="1" VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <Grid HorizontalAlignment="Center" DockPanel.Dock="Top" ShowGridLines="False" ColumnDefinitions="150,150" RowDefinitions="40,40,40,40,40" Margin="10 0 10 0">
+                
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="Try to restore attached Processes" 
+                           ToolTip.Tip="Should the previously attached processes be attempted to be restored the next time the tool is opened?"/>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding TryRestoreAttachedProcesses}" Margin="0 0 -7 0" HorizontalAlignment="Right" />
+
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="Mute Audio" 
+                           ToolTip.Tip="Mute Audio?"/>
+                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding IsAudioMuted}" Margin="0 0 -7 0" HorizontalAlignment="Right" />
+                
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="Use default Hotkeys" 
+                           ToolTip.Tip="The first 11 Spammers will automatically use Shift + F1 - Shift + F11 unless something else is set."/>
+                <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding UseDefaultHotkeys}" Margin="0 0 -7 0" HorizontalAlignment="Right" />
+                
+                <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="Process name" ToolTip.Tip="The name of the Flyff process (e.g 'Neuz')"/>
+
+                <TextBox Width="120" Watermark="e.g 'Neuz'" VerticalAlignment="Center" HorizontalAlignment="Right"
+                         Grid.Row="3" Grid.Column="1" Text="{Binding ProcessName}" />
+                
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="Character name window title regex"
+                           ToolTip.Tip="This regex should filter the character name out of the window title of the process."/>
+
+                <TextBox Width="120" Watermark="e.g ^\S+" VerticalAlignment="Center" HorizontalAlignment="Right"
+                         Grid.Row="4" Grid.Column="1" Text="{Binding ProcessWindowTitleRegex}" />
+            </Grid>
+
+            <StackPanel Margin="0 0 0 10" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="30">
+                <Button Width="110" Command="{Binding OnCancelButtonClicked}">
+                    <StackPanel Spacing="10" Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource dismiss_regular}" />
+                        <TextBlock> Cancel </TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Width="110" Command="{Binding OnApplyButtonClicked}">
+                    <StackPanel Spacing="10" Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource checkmark_regular}" />
+                        <TextBlock> Apply </TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </DockPanel>
+    </Panel>
+</Window>

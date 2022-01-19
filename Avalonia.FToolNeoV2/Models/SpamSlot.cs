@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia.FToolNeoV2.Enums;
 using Avalonia.FToolNeoV2.Services;
+using Avalonia.FToolNeoV2.Utils;
 using Avalonia.Input;
 using Newtonsoft.Json;
 
@@ -14,57 +15,56 @@ public class SpamSlot
     /// </summary>
     [JsonIgnore]
     public int MINIMUM_DELAY { get; } = 50;
-    
+
     /// <summary>
     /// The slot index.
     /// </summary>
     public int Index { get; set; }
-    
+
     /// <summary>
     /// The delay of the spammer in ms.
     /// </summary>
     public int Delay { get; set; }
-    
+
     /// <summary>
     /// The Function key that is being spammed.
     /// </summary>
     public Keys? FKey { get; set; }
-    
+
     /// <summary>
     /// The bar number that is being spammed.
     /// </summary>
     public Keys? BarKey { get; set; }
-    
-    /// <summary>
-    /// The hotkey modifier keys.
-    /// </summary>
-    public KeyModifiers? HotkeyModifierKeys { get; set; }
-    
-    /// <summary>
-    /// The hotkey.
-    /// </summary>
-    public Keys? Hotkey { get; set; }
 
     /// <summary>
-    /// id of the attached Process.
+    /// The hotkey combination that activates this slot if enabled.
+    /// </summary>
+    public HotkeyCombination HotkeyCombination { get; set; }
+
+    /// <summary>
+    /// The id of the attached Process.
     /// </summary>
     public int? ProcessId { get; set; }
+
+    /// <summary>
+    /// The name of the character at the attached process.
+    /// </summary>
+    public string? CharacterName { get; set; }
 
 
     /// <summary>
     /// The json constructor
     /// </summary>
     [JsonConstructor]
-    public SpamSlot(int index, int delay, Keys? fKey, Keys? barKey, KeyModifiers? hotkeyModifierKeys, Keys? hotkey)
+    public SpamSlot(int index, int delay, Keys? fKey, Keys? barKey, HotkeyCombination hotkeyCombination)
     {
         Index = index;
         Delay = delay;
         FKey = fKey;
         BarKey = barKey;
-        HotkeyModifierKeys = hotkeyModifierKeys;
-        Hotkey = hotkey;
+        HotkeyCombination = hotkeyCombination;
     }
-    
+
     /// <summary>
     /// Default constructor
     /// </summary>
@@ -76,8 +76,19 @@ public class SpamSlot
         Delay = MINIMUM_DELAY;
         FKey = null;
         BarKey = null;
-        HotkeyModifierKeys = null;
-        Hotkey = null;
+
+        if (applicationState.ApplicationSettings.UseDefaultHotkeys && index < 12)
+        {
+            HotkeyCombination = new HotkeyCombination()
+            {
+                IsEnabled = true,
+                Key = KeyInterop.IndexToFKey(index)!.Value,
+                Modifiers = KeyModifiers.Shift
+            };
+        }
+        else
+            HotkeyCombination = new HotkeyCombination();
+
         applicationState.SpamSlots.Add(this);
     }
 }

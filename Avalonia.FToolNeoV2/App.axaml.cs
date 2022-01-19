@@ -19,7 +19,7 @@ namespace Avalonia.FToolNeoV2
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.Exit += async (_, _) => await OnApplicationEnd();
+                desktop.Exit += async (_, _) => await OnApplicationExit();
                 
                 desktop.MainWindow = new MainWindow
                 {
@@ -30,10 +30,12 @@ namespace Avalonia.FToolNeoV2
             base.OnFrameworkInitializationCompleted();
         }
 
-        private async Task OnApplicationEnd()
+        private async Task OnApplicationExit()
         {
             SpamHotkeyService.CleanUp();
             await PersistenceManager.Instance.SaveApplicationStateAsync();
+            if (AudioService.IsInitialized)
+                AudioService.Instance.Dispose();
         }
         
     }

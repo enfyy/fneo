@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive;
 using System.Reactive.Linq;
+using Avalonia.FToolNeoV2.Models;
 using Avalonia.FToolNeoV2.ViewModels;
 using GlobalHotKeys;
 using GlobalHotKeys.Native.Types;
@@ -28,6 +28,7 @@ public static class SpamHotkeyService
     /// <param name="key">The key that triggers the hotkey.</param>
     /// <param name="modifiers">The modifer keys.</param>
     /// <param name="spammer">The viewmodel of the spammer.</param>
+    /// <returns>Id of the registered hotkey.</returns>
     public static int RegisterHotkey(VirtualKeyCode key, Modifiers modifiers, SpamSlotViewModel spammer)
     {
         var registration = _hotKeyManager.Register(key, modifiers);
@@ -43,6 +44,15 @@ public static class SpamHotkeyService
         _initialized = true;
         return registration.Id;
     }
+
+    /// <summary>
+    /// Registers a hotkey for a spammer that gets toggled on button press.
+    /// </summary>
+    /// <param name="hotkeyCombination">The combination that gets registered.</param>
+    /// <param name="spammer">The viewmodel of the spammer.</param>
+    /// <returns>Id of the registered hotkey.</returns>
+    public static int RegisterHotkey(HotkeyCombination hotkeyCombination, SpamSlotViewModel spammer) => 
+        RegisterHotkey((VirtualKeyCode) hotkeyCombination.Key, (Modifiers) hotkeyCombination.Modifiers, spammer);
 
     /// <summary>
     /// Unregisters a hotkey.

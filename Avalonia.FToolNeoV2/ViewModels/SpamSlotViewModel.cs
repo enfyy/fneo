@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using Avalonia.FToolNeoV2.Enums;
+using Avalonia.FToolNeoV2.Extensions;
 using Avalonia.FToolNeoV2.Models;
 using Avalonia.FToolNeoV2.Services;
-using GlobalHotKeys.Native.Types;
+using Avalonia.FToolNeoV2.Utils;
 using ReactiveUI;
 
 namespace Avalonia.FToolNeoV2.ViewModels;
@@ -20,7 +22,7 @@ public class SpamSlotViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFKeyIndex, value);
-            SpamSlot.FKey = IndexToFKey(value);
+            SpamSlot.FKey = KeyInterop.IndexToFKey(value);
             ComboBoxesHaveValidValues = SpamSlot.BarKey != null || SpamSlot.FKey != null;
         }
     }
@@ -31,7 +33,7 @@ public class SpamSlotViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedBarIndex, value);
-            SpamSlot.BarKey = IndexToBarKey(value);
+            SpamSlot.BarKey = KeyInterop.IndexToBarKey(value);
             ComboBoxesHaveValidValues = SpamSlot.BarKey != null || SpamSlot.FKey != null;
         }
     }
@@ -87,7 +89,9 @@ public class SpamSlotViewModel : ViewModelBase
 
     public SpamSlot SpamSlot { get; } = null!;
 
-    public Interaction<ProcessSelectionViewModel, Process?> ProcessSelectionDialog { get; } = null!;
+    public Interaction<ProcessSelectionWindowViewModel, Process?> ProcessSelectionDialog { get; } = null!;
+    
+    public Interaction<HotkeyDialogWindowViewModel, HotkeyCombination> HotkeyDialog { get; } = null!;
 
     public ReactiveCommand<Unit, Unit> OnSelectProcessButtonClicked { get; } = null!;
 
@@ -96,6 +100,8 @@ public class SpamSlotViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> OnStartButtonClicked { get; } = null!;
 
     public SpamService? SpamService { get; private set; }
+
+    private ApplicationState _appState = null!;
 
     private bool _processSelected;
 
@@ -117,45 +123,36 @@ public class SpamSlotViewModel : ViewModelBase
 
     public SpamSlotViewModel(int index, SpamSlot spamSlot)
     {
+        _appState = PersistenceManager.Instance.GetApplicationState();
         Index = $"#{index}";
         SpamSlot = spamSlot;
         DelayText = spamSlot.Delay.ToString();
-        if (spamSlot.BarKey != null) SelectedBarIndex = BarKeyToIndex(spamSlot.BarKey.Value);
-        if (spamSlot.FKey != null) SelectedFKeyIndex = FKeyToIndex(spamSlot.FKey.Value);
+        if (spamSlot.BarKey != null) SelectedBarIndex = KeyInterop.BarKeyToIndex(spamSlot.BarKey.Value);
+        if (spamSlot.FKey != null) SelectedFKeyIndex = KeyInterop.FKeyToIndex(spamSlot.FKey.Value);
         
-        // try to recover attached process  
-        if (spamSlot.ProcessId != null)
-        {
-            try
-            {
-                var process = Process.GetProcessById(spamSlot.ProcessId.Value);
-                AttachToProcess(process);
-            }
-            //process not found i guess...
-            catch (InvalidOperationException) { }
-            catch (ArgumentException) { }
-        }
-        
-        //TODO: recover hotkey
+        AttemptProcessRecovery(spamSlot);
 
-        ProcessSelectionDialog = new Interaction<ProcessSelectionViewModel, Process?>();
+        HandleHotkeyRegistry(spamSlot.HotkeyCombination);
+
+        ProcessSelectionDialog = new Interaction<ProcessSelectionWindowViewModel, Process?>();
         
         OnSelectProcessButtonClicked = ReactiveCommand.CreateFromTask( async () =>
         {
-            var processSelection = new ProcessSelectionViewModel();
+            var viewModel = new ProcessSelectionWindowViewModel();
             
-            var result = await ProcessSelectionDialog.Handle(processSelection);
+            var result = await ProcessSelectionDialog.Handle(viewModel);
 
             if (result != null) AttachToProcess(result);
         });
+
+        HotkeyDialog = new Interaction<HotkeyDialogWindowViewModel, HotkeyCombination>();
         
-        OnHotkeyButtonClicked = ReactiveCommand.Create(() =>
+        OnHotkeyButtonClicked = ReactiveCommand.CreateFromTask(async () =>
         {
-            if (SpamService == null) return;
-            if (_hotkeyId == null)
-                _hotkeyId = SpamHotkeyService.RegisterHotkey(VirtualKeyCode.KEY_1, Modifiers.Shift, this);
-            else
-                SpamHotkeyService.UnregisterHotkey(_hotkeyId.Value);
+            var viewModel = new HotkeyDialogWindowViewModel(SpamSlot.HotkeyCombination);
+
+            SpamSlot.HotkeyCombination = await HotkeyDialog.Handle(viewModel);
+            HandleHotkeyRegistry(SpamSlot.HotkeyCombination);
         });
 
         OnStartButtonClicked = ReactiveCommand.Create(ToggleSpammer);
@@ -171,85 +168,99 @@ public class SpamSlotViewModel : ViewModelBase
     /// </summary>
     public void ToggleSpammer()
     {
-        if (SpamService == null) return;
-
+        if (SpamService == null || !StartButtonIsEnabled) return;
+        
+        AudioService.Instance.PlaySound(IsSpamming ? AudioAsset.Pause : AudioAsset.Play);
+        
         SpamService.Toggle();
         IsSpamming = SpamService.IsActive;
     }
 
+    /// <summary>
+    /// Unregisters the hotkey of this slot if it has one registered.
+    /// </summary>
+    public void UnregisterHotkey()
+    {
+        if (_hotkeyId == null) 
+            return;
+            
+        SpamHotkeyService.UnregisterHotkey(_hotkeyId.Value);
+        _hotkeyId = null;
+    }
+
+    /// <summary>
+    /// Attempt to recover the previously attached process by id first, then by character name.
+    /// </summary>
+    /// <param name="spamSlot"> </param>
+    private void AttemptProcessRecovery(SpamSlot spamSlot)
+    {
+        // try to recover attached process  
+        if (spamSlot.ProcessId != null)
+        {
+            try
+            {
+                var process = Process.GetProcessById(spamSlot.ProcessId.Value);
+                AttachToProcess(process);
+                return;
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
+            {
+                spamSlot.ProcessId = null;
+            }
+        }
+
+        if (spamSlot.CharacterName.IsNullOrWhiteSpace()) return;
+
+        try
+        {
+            var processName = _appState.ApplicationSettings.ProcessName;
+            var processes = Process.GetProcessesByName(processName);
+            
+            var process = processes.FirstOrDefault(p =>
+            {
+                var name = _appState.ApplicationSettings.ProcessWindowTitleRegex.Match(p.MainWindowTitle).Value;
+                return !name.IsNullOrWhiteSpace() && name == spamSlot.CharacterName;
+            });
+            
+            if (process != null)
+                AttachToProcess(process);
+            else
+                SpamSlot.CharacterName = null;
+        }
+        catch (InvalidOperationException)
+        {
+            SpamSlot.CharacterName = null;
+        }
+        
+    }
+
+    /// <summary>
+    /// Attach the spammer to a process.
+    /// </summary>
+    /// <param name="process">The process to attach to.</param>
     private void AttachToProcess(Process process)
     {
-        AttachedTo = process.MainWindowTitle;
+        var windowTitle = process.MainWindowTitle;
+        AttachedTo = windowTitle;
         SpamSlot.ProcessId = process.Id;
+        
+        var regex = _appState.ApplicationSettings.ProcessWindowTitleRegex;
+        var name = regex.Match(windowTitle).Value;
+        if (!name.IsNullOrWhiteSpace()) SpamSlot.CharacterName = name; 
+        
         SpamService = new SpamService(process, SpamSlot);
         ProcessSelected = true;
     }
 
-    private static Keys? IndexToFKey(int index)
+    /// <summary>
+    /// Register or unregister a hotkey.
+    /// </summary>
+    /// <param name="hotkeyCombination">The hotkey combination that gets registered if its enabled.</param>
+    private void HandleHotkeyRegistry(HotkeyCombination hotkeyCombination)
     {
-        return index switch
-        {
-            1 => Keys.F1,
-            2 => Keys.F2,
-            3 => Keys.F3,
-            4 => Keys.F4,
-            5 => Keys.F5,
-            6 => Keys.F6,
-            7 => Keys.F7,
-            8 => Keys.F8,
-            9 => Keys.F9,
-            _ => null
-        };
-    }
-
-    private static Keys? IndexToBarKey(int index)
-    {
-        return index switch
-        {
-            1 => Keys.D1,
-            2 => Keys.D2,
-            3 => Keys.D3,
-            4 => Keys.D4,
-            5 => Keys.D5,
-            6 => Keys.D6,
-            7 => Keys.D7,
-            8 => Keys.D8,
-            9 => Keys.D9,
-            _ => null
-        };
-    }
-    
-    private static int FKeyToIndex(Keys key)
-    {
-        return key switch
-        {
-            Keys.F1 => 1,
-            Keys.F2 => 2,
-            Keys.F3 => 3,
-            Keys.F4 => 4,
-            Keys.F5 => 5,
-            Keys.F6 => 6,
-            Keys.F7 => 7,
-            Keys.F8 => 8,
-            Keys.F9 => 9,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-
-    private static int BarKeyToIndex(Keys key)
-    {
-        return key switch
-        {
-            Keys.D1 => 1,
-            Keys.D2 => 2,
-            Keys.D3 => 3,
-            Keys.D4 => 4,
-            Keys.D5 => 5,
-            Keys.D6 => 6,
-            Keys.D7 => 7,
-            Keys.D8 => 8,
-            Keys.D9 => 9,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        if (hotkeyCombination.IsEnabled) 
+            _hotkeyId = SpamHotkeyService.RegisterHotkey(hotkeyCombination, this);
+        else
+            UnregisterHotkey();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using Avalonia.FToolNeoV2.Models;
 using Avalonia.FToolNeoV2.ViewModels;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -14,7 +15,7 @@ public class SpamSlotView : ReactiveUserControl<SpamSlotViewModel>
         InitializeComponent();
     }
     
-    private async Task ShowProcessSelectionDialogAsync(InteractionContext<ProcessSelectionViewModel, Process?> interaction)
+    private async Task ShowProcessSelectionDialogAsync(InteractionContext<ProcessSelectionWindowViewModel, Process?> interaction)
     {
         var dialog = new ProcessSelectionWindow
         {
@@ -25,9 +26,21 @@ public class SpamSlotView : ReactiveUserControl<SpamSlotViewModel>
         interaction.SetOutput(result);
     }
 
+    private async Task ShowHotkeyDialogAsync(InteractionContext<HotkeyDialogWindowViewModel, HotkeyCombination> interaction)
+    {
+        var dialog = new HotkeyDialogWindow()
+        {
+            DataContext = interaction.Input
+        };
+
+        var result = await dialog.ShowDialog<HotkeyCombination>((MainWindow) VisualRoot!);
+        interaction.SetOutput(result);
+    }
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
         this.WhenActivated(d => d(ViewModel!.ProcessSelectionDialog.RegisterHandler(ShowProcessSelectionDialogAsync)));
+        this.WhenActivated(d => d(ViewModel!.HotkeyDialog.RegisterHandler(ShowHotkeyDialogAsync)));
     }
 }

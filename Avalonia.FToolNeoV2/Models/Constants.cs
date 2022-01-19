@@ -13,4 +13,14 @@ public class Constants
     /// Name of the file 
     /// </summary>
     public const string PERSISTENT_FILE_NAME = "ftool-settings.json";
+
+    /// <summary>
+    /// Name of the assembly. used to load resources.
+    /// </summary>
+    public const string ASSEMBLY_NAME = "Avalonia.FToolNeoV2";
+    
+    /// <summary>
+    /// Default volume of audio playback.
+    /// </summary>
+    public const float AUDIO_VOLUME = 0.4f;
 }

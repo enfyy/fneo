@@ -7,58 +7,62 @@
         x:Class="Avalonia.FToolNeoV2.Views.ProcessSelectionWindow"
         Width="300"
         Height="300"
+        MinHeight="300"
+        MinWidth="300"
         Background="Transparent"
         Title="ProcessSelectionWindow"
         TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True"
-        WindowStartupLocation="CenterOwner"
-        CanResize="False">
-        
-        <Design.DataContext>
-                <vm:ProcessSelectionViewModel/>
-        </Design.DataContext>
-        
+        WindowStartupLocation="CenterOwner">
+
+    <Design.DataContext>
+        <vm:ProcessSelectionWindowViewModel />
+    </Design.DataContext>
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="0.6"
+                    MaterialOpacity="0.1" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
         <Panel>
-                <ExperimentalAcrylicBorder IsHitTestVisible="False">
-                        <ExperimentalAcrylicBorder.Material>
-                                <ExperimentalAcrylicMaterial 
-                                        BackgroundSource="Digger"
-                                        TintColor="Black"
-                                        TintOpacity="0.6"
-                                        MaterialOpacity="0.1" />
-                        </ExperimentalAcrylicBorder.Material>
-                </ExperimentalAcrylicBorder>
-                <Panel>
-                        <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                                <Button Command="{Binding OnRefreshButtonClicked}" Margin="10 10 10 0">
-                                        <PathIcon Data="{StaticResource arrow_sync_regular}"/>
-                                </Button>
-                                <TextBlock Foreground="SpringGreen" Margin="30 15 0 0" VerticalAlignment="Center"> Select the process </TextBlock>
-                        </StackPanel>
-                        
-                        <ListBox SelectedIndex="{Binding SelectedIndex}" Items="{Binding ProcessNames}" Margin="0 50 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" Background="Transparent" Height="200" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                <ListBox.Styles>
-                                        <Style Selector="ListBoxItem">
-                                                <Setter Property="Width" Value="280"/>
-                                                <Setter Property="Foreground" Value="Black"/>
-                                        </Style>
-                                </ListBox.Styles>
-                        </ListBox>
-                        
-                        <StackPanel Margin="0 0 0 10" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="30" HorizontalAlignment="Center">
-                                <Button Width="110" Command="{Binding OnApplyButtonClicked}">
-                                        <StackPanel Spacing="10" Orientation="Horizontal">
-                                                <PathIcon Data="{StaticResource checkmark_regular}"/>
-                                                <TextBlock> Select </TextBlock>
-                                        </StackPanel>
-                                </Button>
-                                <Button Width="110" Command="{Binding OnJumpButtonClicked}">
-                                        <StackPanel Spacing="10" Orientation="Horizontal">
-                                                <PathIcon Data="{StaticResource fluid_regular}"/>
-                                                <TextBlock> Jump to</TextBlock>
-                                        </StackPanel>
-                                </Button>
-                        </StackPanel>
-                </Panel>
+            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                <Button Command="{Binding OnRefreshButtonClicked}" Margin="10 10 10 0">
+                    <PathIcon Data="{StaticResource arrow_sync_regular}" />
+                </Button>
+                <TextBlock Foreground="SpringGreen" Margin="30 15 0 0" VerticalAlignment="Center"> Select the process </TextBlock>
+            </StackPanel>
+
+            <ListBox SelectedIndex="{Binding SelectedIndex}" Items="{Binding ProcessNames}" Margin="0 50 0 0"
+                     VerticalAlignment="Top" HorizontalAlignment="Center" Background="Transparent" Height="200"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Width" Value="280" />
+                        <Setter Property="Foreground" Value="Black" />
+                    </Style>
+                </ListBox.Styles>
+            </ListBox>
+
+            <StackPanel Margin="0 0 0 10" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="30"
+                        HorizontalAlignment="Center">
+                <Button Width="110" Command="{Binding OnApplyButtonClicked}">
+                    <StackPanel Spacing="10" Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource checkmark_regular}" />
+                        <TextBlock> Select </TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Width="110" Command="{Binding OnJumpButtonClicked}">
+                    <StackPanel Spacing="10" Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource fluid_regular}" />
+                        <TextBlock> Jump to</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Panel>
+    </Panel>
 </Window>
