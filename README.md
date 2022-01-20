@@ -1,4 +1,4 @@
-<img src="Assets/logo.png" alt="drawing" width="100"/>
+<img src="Avalonia.FToolNeoV2/Assets/logo.png" alt="drawing" width="100"/>
 
 ----
 f.neo is a function-key and/or decimal-number-key spam tool for Flyff.\
@@ -6,7 +6,7 @@ I already made a tool like this some time ago but it kind of sucked and i needed
 
 &nbsp;
 
-<img src="Assets/screenshot.png" alt="drawing" width="350"/>
+<img src="Avalonia.FToolNeoV2/Assets/screenshot.png" alt="drawing" width="350"/>
 
 &nbsp;
 ## New features:
