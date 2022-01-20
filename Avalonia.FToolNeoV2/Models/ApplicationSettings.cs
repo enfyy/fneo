@@ -20,7 +20,7 @@ public class ApplicationSettings
     public Regex ProcessWindowTitleRegex { get; set; } = new (@"^\S+");
 
     /// <summary>
-    /// Should the application try to restore attached processes by using the character name?
+    /// Should the application try to restore attached processes ?
     /// </summary>
     public bool TryRestoreProcesses { get; set; } = false;
 

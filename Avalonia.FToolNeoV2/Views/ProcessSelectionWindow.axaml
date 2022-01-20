@@ -11,7 +11,7 @@
         MinWidth="300"
         Background="Transparent"
         Title="ProcessSelectionWindow"
-        TransparencyLevelHint="AcrylicBlur"
+        TransparencyLevelHint="Blur"
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterOwner">
 
@@ -24,9 +24,9 @@
             <ExperimentalAcrylicBorder.Material>
                 <ExperimentalAcrylicMaterial
                     BackgroundSource="Digger"
-                    TintColor="Black"
-                    TintOpacity="0.6"
-                    MaterialOpacity="0.1" />
+                    TintColor="MidnightBlue"
+                    TintOpacity="0.8"
+                    MaterialOpacity="0" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
         <Panel>

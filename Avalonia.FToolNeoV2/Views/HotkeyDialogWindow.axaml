@@ -11,7 +11,9 @@
         Height="240"
         Width="300"
         WindowStartupLocation="CenterOwner"
-        ExtendClientAreaToDecorationsHint="True">
+        ExtendClientAreaToDecorationsHint="True"
+        Background="Transparent"
+        TransparencyLevelHint="Blur">
 
     <Design.DataContext>
         <viewModels:HotkeyDialogWindowViewModel />
@@ -22,9 +24,9 @@
             <ExperimentalAcrylicBorder.Material>
                 <ExperimentalAcrylicMaterial
                     BackgroundSource="Digger"
-                    TintColor="Black"
-                    TintOpacity="0.6"
-                    MaterialOpacity="0.1" />
+                    TintColor="MidnightBlue"
+                    TintOpacity="0.8"
+                    MaterialOpacity="0" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
         <DockPanel LastChildFill="False">

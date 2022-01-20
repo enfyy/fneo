@@ -8,7 +8,7 @@
         Icon="/Assets/f.ico"
         Title="F-Tool neo -V2-"
         Background="Transparent"
-        TransparencyLevelHint="AcrylicBlur"
+        TransparencyLevelHint="Blur"
         MinWidth="410"
         Width="410"
         MinHeight="260"
@@ -32,15 +32,15 @@
             <ExperimentalAcrylicBorder.Material>
                 <ExperimentalAcrylicMaterial
                     BackgroundSource="Digger"
-                    TintColor="Black"
-                    TintOpacity="0.6"
-                    MaterialOpacity="0.1" />
+                    TintColor="MidnightBlue"
+                    TintOpacity="0.8"
+                    MaterialOpacity="0" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
         <DockPanel>
             <Panel DockPanel.Dock="Top">
-                <Image Source="/Assets/logo.png" Width="100" HorizontalAlignment="Left" Margin="20 20 0 0" />
+                <Image Source="/Assets/logo.png" Width="65" HorizontalAlignment="Left" Margin="20 10 0 0" />
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button IsVisible="{Binding IsNotElevated}" ToolTip.Tip="Sir, pls run as admin." Margin="0 20 20 0">
                         <PathIcon Foreground="Crimson" Data="{StaticResource shield_keyhole_regular}" />

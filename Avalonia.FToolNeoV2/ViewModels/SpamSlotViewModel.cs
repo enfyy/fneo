@@ -194,6 +194,8 @@ public class SpamSlotViewModel : ViewModelBase
     /// <param name="spamSlot"> </param>
     private void AttemptProcessRecovery(SpamSlot spamSlot)
     {
+        if (!_appState.ApplicationSettings.TryRestoreProcesses)
+            return;
         // try to recover attached process  
         if (spamSlot.ProcessId != null)
         {

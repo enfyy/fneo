@@ -12,7 +12,9 @@
         MinWidth="250"
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterOwner"
-        CanResize="False">
+        CanResize="False"
+        Background="Transparent"
+        TransparencyLevelHint="Blur">
 
     <Design.DataContext>
         <viewModels:AboutWindowViewModel />
@@ -23,27 +25,32 @@
             <ExperimentalAcrylicBorder.Material>
                 <ExperimentalAcrylicMaterial
                     BackgroundSource="Digger"
-                    TintColor="Black"
-                    TintOpacity="0.6"
-                    MaterialOpacity="0.1" />
+                    TintColor="MidnightBlue"
+                    TintOpacity="0.8"
+                    MaterialOpacity="0" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
         <StackPanel>
-            <StackPanel DockPanel.Dock="Top">
+            <StackPanel>
                 <TextBlock Margin="0 30 0 0" HorizontalAlignment="Center" FontSize="18"> About </TextBlock>
                 <Rectangle Margin="0 0 0 10 " Fill="White" Width="100" Height="1" VerticalAlignment="Center"
                            HorizontalAlignment="Center" />
             </StackPanel>
-            <TextBlock Foreground="SpringGreen" FontSize="19" Margin="20 5 20 0" DockPanel.Dock="Top">
-                F-Tool neo -V2- by enfy
-            </TextBlock>
-            <TextBlock FontSize="12" TextWrapping="Wrap" Margin="20 20 20 5" DockPanel.Dock="Top">
+            <StackPanel Margin="20 5 10 0" Orientation="Horizontal">
+                <TextBlock Foreground="SpringGreen" FontSize="18" Margin="20 5 20 0">
+                    f.neo
+                </TextBlock>
+                <TextBlock Foreground="MidnightBlue" FontSize="15" Margin="10 5 20 0">
+                    by  enfy
+                </TextBlock>
+            </StackPanel>
+            <TextBlock FontSize="12" TextWrapping="Wrap" Margin="20 20 20 5">
                 Check out the source or send bug-reports at this link:
             </TextBlock>
             <Button Width="210" Margin="20 0 20 0" Command="{Binding OnGithubButtonClicked}">
                 <PathIcon Height="30" Data="{StaticResource github_logo}"/>
             </Button>
-            <TextBlock FontSize="12" TextWrapping="Wrap" Margin="20 20 20 5" DockPanel.Dock="Top">
+            <TextBlock FontSize="12" TextWrapping="Wrap" Margin="20 20 20 5">
                 If you like this tool and you feel like supporting me use this ko-fi link:
             </TextBlock>
             <Button Width="210" Margin="20 0 20 0" Command="{Binding OnKofiButtonClicked}">
