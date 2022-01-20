@@ -38,9 +38,9 @@ public class ApplicationState
     public ApplicationState()
     {
         SpamSlots = new List<SpamSlot>();
+        ApplicationSettings = new ApplicationSettings();
         _ = new SpamSlot(1, this);
         _ = new SpamSlot(2, this);
-        ApplicationSettings = new ApplicationSettings();
     }
 
 

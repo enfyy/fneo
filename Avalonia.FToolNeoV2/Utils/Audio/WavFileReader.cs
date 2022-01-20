@@ -31,8 +31,8 @@ namespace NAudio.Wave
         /// </summary>
         public override long Position
         {
-            get => SourceToDest(_readerStream.Position);
-            set { lock (_lockObject) { _readerStream.Position = DestToSource(value); }  }
+            get => SourceToDest(_readerStream!.Position);
+            set { lock (_lockObject) { _readerStream!.Position = DestToSource(value); }  }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace NAudio.Wave
             set => _sampleChannel.Volume = value;
         }
 
-        private WaveStream _readerStream; // the waveStream which we will use for all positioning
+        private WaveStream? _readerStream; // the waveStream which we will use for all positioning
 
         private readonly SampleChannel _sampleChannel; // sample provider that gives us most stuff we need
 
@@ -78,8 +78,7 @@ namespace NAudio.Wave
         {
             _readerStream = new WaveFileReader(fileStream);
 
-            if (_readerStream.WaveFormat.Encoding == WaveFormatEncoding.Pcm ||
-                _readerStream.WaveFormat.Encoding == WaveFormatEncoding.IeeeFloat) 
+            if (_readerStream.WaveFormat.Encoding is WaveFormatEncoding.Pcm or WaveFormatEncoding.IeeeFloat) 
                 return;
                 
             _readerStream = WaveFormatConversionStream.CreatePcmStream(_readerStream);
