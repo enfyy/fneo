@@ -16,9 +16,13 @@ public class MainWindowViewModel : ViewModelBase
     
     public ReactiveCommand<Unit, Unit> OnRemoveButtonClicked { get; init; }
     
-    public ReactiveCommand<Unit, Unit> OnSettingsButtonClicked { get; } = null!;
+    public ReactiveCommand<Unit, Unit> OnSettingsButtonClicked { get; init; }
+    
+    public ReactiveCommand<Unit, Unit> OnAboutButtonClicked { get; init; }
 
     public Interaction<SettingsWindowViewModel, Unit> SettingsWindowDialog { get; } = null!;
+    
+    public Interaction<AboutWindowViewModel, Unit> AboutWindowDialog { get; } = null!;
 
     private bool RemoveButtonActive
     {
@@ -74,6 +78,14 @@ public class MainWindowViewModel : ViewModelBase
         {
             var settingsViewModel = new SettingsWindowViewModel(); 
             await SettingsWindowDialog.Handle(settingsViewModel);
+        });
+        
+        AboutWindowDialog = new Interaction<AboutWindowViewModel, Unit>();
+        
+        OnAboutButtonClicked = ReactiveCommand.CreateFromTask( async () =>
+        {
+            var aboutViewModel = new AboutWindowViewModel(); 
+            await AboutWindowDialog.Handle(aboutViewModel);
         });
     }
 

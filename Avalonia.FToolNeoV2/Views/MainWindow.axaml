@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="480"
         x:Class="Avalonia.FToolNeoV2.Views.MainWindow"
         Icon="/Assets/f.ico"
-        Title="F-Tool neo V2"
+        Title="F-Tool neo -V2-"
         Background="Transparent"
         TransparencyLevelHint="AcrylicBlur"
         MinWidth="410"
@@ -48,7 +48,7 @@
                     <Button ToolTip.Tip="Open compact dock" Margin="0 20 20 0">
                         <PathIcon Data="{StaticResource dock_regular}" />
                     </Button>
-                    <Button ToolTip.Tip="About" Margin="0 20 20 0">
+                    <Button ToolTip.Tip="About" Margin="0 20 20 0" Command="{Binding OnAboutButtonClicked}">
                         <PathIcon Data="{StaticResource question_regular}" />
                     </Button>
                     <Button Command="{Binding OnSettingsButtonClicked}" ToolTip.Tip="Options" Margin="0 20 20 0">

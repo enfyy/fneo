@@ -27,12 +27,24 @@ public class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         AvaloniaXamlLoader.Load(this);
         Handle = ((WindowImpl) ((TopLevel) this.GetVisualRoot()).PlatformImpl).Handle.Handle;
-        this.WhenActivated(d => d(ViewModel!.SettingsWindowDialog.RegisterHandler(ShowSettingsSelectionDialogAsync)));
+        this.WhenActivated(d => d(ViewModel!.SettingsWindowDialog.RegisterHandler(ShowSettingsDialogAsync)));
+        this.WhenActivated(d => d(ViewModel!.AboutWindowDialog.RegisterHandler(ShowAboutWindowDialogAsync)));
     }
 
-    private async Task ShowSettingsSelectionDialogAsync(InteractionContext<SettingsWindowViewModel, Unit> interaction)
+    private async Task ShowSettingsDialogAsync(InteractionContext<SettingsWindowViewModel, Unit> interaction)
     {
         var dialog = new SettingsWindow()
+        {
+            DataContext = interaction.Input
+        };
+
+        var result = await dialog.ShowDialog<Unit>(this);
+        interaction.SetOutput(result);
+    }
+    
+    private async Task ShowAboutWindowDialogAsync(InteractionContext<AboutWindowViewModel, Unit> interaction)
+    {
+        var dialog = new AboutWindow()
         {
             DataContext = interaction.Input
         };

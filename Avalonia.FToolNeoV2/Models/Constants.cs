@@ -23,4 +23,14 @@ public class Constants
     /// Default volume of audio playback.
     /// </summary>
     public const float AUDIO_VOLUME = 0.4f;
+
+    /// <summary>
+    /// Github link to the source code.
+    /// </summary>
+    public const string GITHUB_LINK = "https://github.com/enfyy/FToolNeoV2";
+
+    /// <summary>
+    /// Kofi link.
+    /// </summary>
+    public const string KOFI_LINK = "https://ko-fi.com/enfyr";
 }
