@@ -27,7 +27,7 @@ public class Constants
     /// <summary>
     /// Github link to the source code.
     /// </summary>
-    public const string GITHUB_LINK = "https://github.com/enfyy/FToolNeoV2";
+    public const string GITHUB_LINK = "https://github.com/enfyy/fneo";
 
     /// <summary>
     /// Kofi link.
