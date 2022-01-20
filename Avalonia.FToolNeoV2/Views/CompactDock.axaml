@@ -6,7 +6,11 @@
         mc:Ignorable="d" d:DesignWidth="160" d:DesignHeight="400"
         x:Class="Avalonia.FToolNeoV2.Views.CompactDock"
         Title="CompactDock"
-        SystemDecorations="None">
+        SystemDecorations="None"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        TransparencyLevelHint="Blur">
     
     <Window.Styles>
         <Style Selector="ToggleButton PathIcon.tbchecked">
@@ -28,6 +32,17 @@
     </Design.DataContext>
     
     <StackPanel Orientation="Vertical">
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="MidnightBlue"
+                    TintOpacity="0.8"
+                    MaterialOpacity="0" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        
+        
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <ToggleButton Width="35">
                 <PathIcon Data="{StaticResource dismiss_regular}"/>

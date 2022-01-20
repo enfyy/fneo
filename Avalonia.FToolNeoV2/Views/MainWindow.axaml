@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="480"
         x:Class="Avalonia.FToolNeoV2.Views.MainWindow"
         Icon="/Assets/f.ico"
-        Title="F-Tool neo -V2-"
+        Title="fneo"
         Background="Transparent"
         TransparencyLevelHint="Blur"
         MinWidth="410"
