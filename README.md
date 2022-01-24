@@ -16,7 +16,7 @@ I already made a tool like this some time ago but it kind of sucked and i needed
 - Audio Feedback on activation.
 - Settings menu.
 - Detects when not ran as administrator.
-- (soon) Detachable compact dock 
+- Detachable compact dock 
 - Cool new UI
 
 
