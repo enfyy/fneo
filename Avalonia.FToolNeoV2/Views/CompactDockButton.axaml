@@ -1,0 +1,69 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Avalonia.FToolNeoV2.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Avalonia.FToolNeoV2.Views.CompactDockButtonView">
+
+    <UserControl.Styles>
+        <Style Selector="ToggleButton PathIcon.tbchecked">
+            <Setter Property="IsVisible" Value="false"/>
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.tbchecked">
+            <Setter Property="IsVisible" Value="true"/>
+        </Style>
+        <Style Selector="ToggleButton PathIcon.tbunchecked">
+            <Setter Property="IsVisible" Value="true"/>
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.tbunchecked">
+            <Setter Property="IsVisible" Value="false"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Design.DataContext>
+        <viewModels:CompactDockButtonViewModel/>
+    </Design.DataContext>
+
+    <Panel Margin="0 1 0 1">
+        <ExperimentalAcrylicBorder CornerRadius="3" IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="MidnightBlue"
+                    TintOpacity="0.8"
+                    MaterialOpacity="0" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        
+        <ToggleButton 
+            IsChecked="{Binding ButtonIsToggled}"
+            Command="{Binding OnButtonToggled}"
+            Width="150" 
+            Height="27">
+            
+            <DockPanel>
+                <TextBlock
+                    Text="{Binding IndexText}"
+                    FontSize="12" 
+                    Foreground="Black" 
+                    DockPanel.Dock="Left" 
+                    Width="30"/>
+
+                <TextBlock 
+                    Text="{Binding SpamSlotViewModel.AttachedTo}"
+                    DockPanel.Dock="Left" 
+                    Width="100" 
+                    TextWrapping="Wrap" 
+                    VerticalAlignment="Center" 
+                    FontSize="12" 
+                    Foreground="White" 
+                    HorizontalAlignment="Left"/>
+            
+                <PathIcon Classes="tbchecked" DockPanel.Dock="Right" Width="20" VerticalAlignment="Center" HorizontalAlignment="Right" Height="12" Foreground="DeepPink" Data="{StaticResource stop_regular}"/>
+                <PathIcon Classes="tbunchecked" DockPanel.Dock="Right" Width="20" VerticalAlignment="Center" HorizontalAlignment="Right" Height="12" Foreground="SpringGreen" Data="{StaticResource play_regular}"/>
+            </DockPanel>
+        </ToggleButton>
+    </Panel>
+    
+</UserControl>

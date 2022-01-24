@@ -21,7 +21,7 @@ public class HotkeyDialogWindow : ReactiveWindow<HotkeyDialogWindowViewModel>
     {
         AvaloniaXamlLoader.Load(this);
         this.WhenActivated(d => d(ViewModel!.OnApplyButtonClicked.Subscribe((result) => Close(result))));
-        this.WhenActivated(d => d(ViewModel!.OnCancelButtonClicked.Subscribe((_) => Close())));
+        this.WhenActivated(d => d(ViewModel!.OnCancelButtonClicked.Subscribe((result) => Close(result))));
     }
     private void OnHotkeyUp(object? sender, KeyEventArgs args) => ViewModel?.OnHotkeyUp();
 

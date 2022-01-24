@@ -26,14 +26,15 @@ public class SpamSlotView : ReactiveUserControl<SpamSlotViewModel>
         interaction.SetOutput(result);
     }
 
-    private async Task ShowHotkeyDialogAsync(InteractionContext<HotkeyDialogWindowViewModel, HotkeyCombination> interaction)
+    private async Task ShowHotkeyDialogAsync(InteractionContext<HotkeyDialogWindowViewModel, HotkeyDialogResult> interaction)
     {
         var dialog = new HotkeyDialogWindow()
         {
             DataContext = interaction.Input
         };
 
-        var result = await dialog.ShowDialog<HotkeyCombination>((MainWindow) VisualRoot!);
+        var result = await dialog.ShowDialog<HotkeyDialogResult>((MainWindow) VisualRoot!);
+
         interaction.SetOutput(result);
     }
 

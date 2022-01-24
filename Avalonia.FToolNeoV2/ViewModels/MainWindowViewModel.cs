@@ -18,11 +18,21 @@ public class MainWindowViewModel : ViewModelBase
     
     public ReactiveCommand<Unit, Unit> OnSettingsButtonClicked { get; init; }
     
+    public ReactiveCommand<Unit, Unit> OnDockButtonToggled { get; init; }
+    
     public ReactiveCommand<Unit, Unit> OnAboutButtonClicked { get; init; }
 
     public Interaction<SettingsWindowViewModel, Unit> SettingsWindowDialog { get; } = null!;
     
     public Interaction<AboutWindowViewModel, Unit> AboutWindowDialog { get; } = null!;
+    
+    public Interaction<CompactDockViewModel, Unit> CompactDockWindow { get; } = null!;
+
+    public bool DockButtonIsToggled
+    {
+        get => _dockButtonIsToggled;
+        set => this.RaiseAndSetIfChanged(ref _dockButtonIsToggled, value);
+    }
 
     private bool RemoveButtonActive
     {
@@ -35,6 +45,8 @@ public class MainWindowViewModel : ViewModelBase
         get => _isNotElevated;
         set => this.RaiseAndSetIfChanged(ref _isNotElevated, value);
     }
+
+    private bool _dockButtonIsToggled;
 
     private bool _removeButtonActive;
     
@@ -86,6 +98,14 @@ public class MainWindowViewModel : ViewModelBase
         {
             var aboutViewModel = new AboutWindowViewModel(); 
             await AboutWindowDialog.Handle(aboutViewModel);
+        });
+        
+        CompactDockWindow = new Interaction<CompactDockViewModel, Unit>();
+        
+        OnDockButtonToggled = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var compactDockViewModel = new CompactDockViewModel(SpamSlotViews);
+            await CompactDockWindow.Handle(compactDockViewModel);
         });
     }
 

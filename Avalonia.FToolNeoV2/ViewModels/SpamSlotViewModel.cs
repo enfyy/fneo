@@ -91,7 +91,7 @@ public class SpamSlotViewModel : ViewModelBase
 
     public Interaction<ProcessSelectionWindowViewModel, Process?> ProcessSelectionDialog { get; } = null!;
     
-    public Interaction<HotkeyDialogWindowViewModel, HotkeyCombination> HotkeyDialog { get; } = null!;
+    public Interaction<HotkeyDialogWindowViewModel, HotkeyDialogResult> HotkeyDialog { get; } = null!;
 
     public ReactiveCommand<Unit, Unit> OnSelectProcessButtonClicked { get; } = null!;
 
@@ -145,13 +145,17 @@ public class SpamSlotViewModel : ViewModelBase
             if (result != null) AttachToProcess(result);
         });
 
-        HotkeyDialog = new Interaction<HotkeyDialogWindowViewModel, HotkeyCombination>();
+        HotkeyDialog = new Interaction<HotkeyDialogWindowViewModel, HotkeyDialogResult>();
         
         OnHotkeyButtonClicked = ReactiveCommand.CreateFromTask(async () =>
         {
             var viewModel = new HotkeyDialogWindowViewModel(SpamSlot.HotkeyCombination);
+            
+            var result = await HotkeyDialog.Handle(viewModel);
+            if (result.Cancelled)
+                return;
 
-            SpamSlot.HotkeyCombination = await HotkeyDialog.Handle(viewModel);
+            SpamSlot.HotkeyCombination = result.HotkeyCombination;
             HandleHotkeyRegistry(SpamSlot.HotkeyCombination);
         });
 
@@ -248,10 +252,17 @@ public class SpamSlotViewModel : ViewModelBase
         
         var regex = _appState.ApplicationSettings.ProcessWindowTitleRegex;
         var name = regex.Match(windowTitle).Value;
-        if (!name.IsNullOrWhiteSpace()) SpamSlot.CharacterName = name; 
+        if (!name.IsNullOrWhiteSpace())
+        {
+            SpamSlot.CharacterName = name;
+            AttachedTo = name;
+        } 
         
         SpamService = new SpamService(process, SpamSlot);
         ProcessSelected = true;
+        
+        process.EnableRaisingEvents = true;
+        process.Exited += OnAttachedProcessExited;
     }
 
     /// <summary>
@@ -264,5 +275,20 @@ public class SpamSlotViewModel : ViewModelBase
             _hotkeyId = SpamHotkeyService.RegisterHotkey(hotkeyCombination, this);
         else
             UnregisterHotkey();
+    }
+
+    private void OnAttachedProcessExited(object? sender, EventArgs e)
+    {
+        AttachedTo = string.Empty;
+        SpamSlot.ProcessId = null;
+        SpamSlot.CharacterName = null;
+        SpamService = null;
+        
+        _processSelected = false;
+        _startButtonIsEnabled = false;
+        
+        if(sender == null) return;
+        var process = (Process) sender;
+        process.Exited -= OnAttachedProcessExited;
     }
 }

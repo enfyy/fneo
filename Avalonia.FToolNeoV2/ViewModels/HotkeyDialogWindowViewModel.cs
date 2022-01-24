@@ -11,9 +11,9 @@ namespace Avalonia.FToolNeoV2.ViewModels;
 
 public class HotkeyDialogWindowViewModel : ViewModelBase
 {
-    public ReactiveCommand<Unit, HotkeyCombination> OnApplyButtonClicked { get; init; }
+    public ReactiveCommand<Unit, HotkeyDialogResult> OnApplyButtonClicked { get; init; }
 
-    public ReactiveCommand<Unit, Unit> OnCancelButtonClicked { get; init; }
+    public ReactiveCommand<Unit, HotkeyDialogResult> OnCancelButtonClicked { get; init; }
 
     public bool HotkeyButtonToggled
     {
@@ -54,9 +54,11 @@ public class HotkeyDialogWindowViewModel : ViewModelBase
         IsEnabled = hotkeyCombination.IsEnabled;
         SetHotkeyText(hotkeyCombination);
 
-        OnApplyButtonClicked = ReactiveCommand.Create(() => _hotkeyCombination);
+        OnApplyButtonClicked = ReactiveCommand.Create(() =>
+            new HotkeyDialogResult() {HotkeyCombination = _hotkeyCombination, Cancelled = false});
 
-        OnCancelButtonClicked = ReactiveCommand.Create(() => { });
+        OnCancelButtonClicked = ReactiveCommand.Create(() =>
+            new HotkeyDialogResult() {HotkeyCombination = _hotkeyCombination, Cancelled = true});
     }
 
     /// <summary>

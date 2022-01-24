@@ -1,0 +1,45 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Avalonia.FToolNeoV2.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="150" d:DesignHeight="400"
+        x:Class="Avalonia.FToolNeoV2.Views.CompactDockWindow"
+        Title="Dock"
+        Height="100"
+        Width="150"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        SystemDecorations="None"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        BorderThickness="0"
+        CanResize="False">
+    
+    <Design.DataContext>
+        <viewModels:CompactDockViewModel />
+    </Design.DataContext>
+    
+    <StackPanel Orientation="Vertical">
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="MidnightBlue"
+                    TintOpacity="0.8"
+                    MaterialOpacity="0" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <Border Margin="0 0 0 2" BorderThickness="1" Background="Silver" CornerRadius="3">
+            <Panel Height="15">
+                <PathIcon HorizontalAlignment="Left" Height="12" Foreground="Gray" Data="{StaticResource arrow_move_regular}"/>
+            </Panel>
+        </Border>
+        <StackPanel>
+            <ItemsControl Items="{Binding SpamButtons}"/>
+        </StackPanel>
+        
+    </StackPanel>
+</Window>

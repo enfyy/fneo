@@ -5,11 +5,6 @@ namespace Avalonia.FToolNeoV2.Models;
 public class Constants
 {
     /// <summary>
-    /// Message that is sent to the process that represents a key being pressed down.
-    /// </summary>
-    public const UInt32 WM_KEYDOWN = 0x0100;
-
-    /// <summary>
     /// Name of the file 
     /// </summary>
     public const string PERSISTENT_FILE_NAME = "ftool-settings.json";
@@ -33,4 +28,18 @@ public class Constants
     /// Kofi link.
     /// </summary>
     public const string KOFI_LINK = "https://ko-fi.com/enfyr";
+    
+    //------------------------------------------------------------------------------------------------------------------
+    // User 32 stuff:
+    
+    /// <summary>
+    /// Message that is sent to the process that represents a key being pressed down.
+    /// </summary>
+    public const UInt32 WM_KEYDOWN = 0x0100;
+    
+    public const uint WS_EX_TRANSPARENT = 0x00000020;
+    
+    public const uint WS_EX_LAYERED = 0x00080000;
+    
+    public static readonly int GWL_EXSTYLE = -20;
 }

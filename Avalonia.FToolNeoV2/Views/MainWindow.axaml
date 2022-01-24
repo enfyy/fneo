@@ -45,9 +45,9 @@
                     <Button IsVisible="{Binding IsNotElevated}" ToolTip.Tip="Sir, pls run as admin." Margin="0 20 20 0">
                         <PathIcon Foreground="Crimson" Data="{StaticResource shield_keyhole_regular}" />
                     </Button>
-                    <Button ToolTip.Tip="Open compact dock" Margin="0 20 20 0">
+                    <ToggleButton IsChecked="{Binding DockButtonIsToggled}" ToolTip.Tip="Open compact dock" Margin="0 20 20 0" Command="{Binding OnDockButtonToggled}">
                         <PathIcon Data="{StaticResource dock_regular}" />
-                    </Button>
+                    </ToggleButton>
                     <Button ToolTip.Tip="About" Margin="0 20 20 0" Command="{Binding OnAboutButtonClicked}">
                         <PathIcon Data="{StaticResource question_regular}" />
                     </Button>
