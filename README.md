@@ -21,6 +21,7 @@ I already made a tool like this some time ago but it kind of sucked and i needed
 
 
 ## What do the different versions mean?
+Windows only. (does flyff even run anywhere else?)
 The self contained versions have everything needed to run contained in one file (which in return makes them quite large.) while the framework dependent versions do not and thus require a installation of the .NET 6 framework on your computer.
 
 ## You found a bug or have improvement ideas?
